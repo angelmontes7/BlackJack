@@ -1,0 +1,376 @@
+/*card deck image modified from https://www.vector4free.com*/
+.card_deck {
+    background: url("../img/carddeck.png");
+    display: inline-block;
+    height: 215px;
+    width: 153px;
+    border: 1px solid #666;
+    border-radius: 8px;
+    margin-right: 10px; 
+    animation: slideIn 0.5s ease-out; /* Slide in over 0.5 seconds */
+}
+
+#facedown {background-position: -2154px -4px;}
+
+#D2 {background-position: -2px -2px;}
+#D3 {background-position: -168px -2px;}
+#D4 {background-position: -332px -2px;}
+#D5 {background-position: -496px -2px;}
+#D6 {background-position: -661px -2px;}
+#D7 {background-position: -825px -2px;}
+#D8 {background-position: -990px -2px;}
+#D9 {background-position: -1155px -2px;}
+#D10 {background-position: -1320px -3px;}
+#D11 {background-position: -1483px -3px;}
+#D12 {background-position: -1648px -4px;}
+#D13 {background-position: -1812px -4px;}
+#D1 {background-position: -1978px -4px;}
+
+#C2 {background-position: -232px -232px;}
+#C3 {background-position: -168px -232px;}
+#C4 {background-position: -332px -232px;}
+#C5 {background-position: -496px -232px;}
+#C6 {background-position: -661px -232px;}
+#C7 {background-position: -825px -232px;}
+#C8 {background-position: -990px -232px;}
+#C9 {background-position: -1155px -232px;}
+#C10 {background-position: -1320px -233px;}
+#C11 {background-position: -1484px -234px;}
+#C12 {background-position: -1647px -233px;}
+#C13 {background-position: -1812px -234px;}
+#C1 {background-position: -1978px -234px;}
+
+#H2 {background-position: -464px -464px;}
+#H3 {background-position: -168px -464px;}
+#H4 {background-position: -332px -464px;}
+#H5 {background-position: -496px -464px;}
+#H6 {background-position: -661px -464px;}
+#H7 {background-position: -825px -464px;}
+#H8 {background-position: -990px -464px;}
+#H9 {background-position: -1155px -464px;}
+#H10 {background-position: -1320px -464px;}
+#H11 {background-position: -1483px -464px;}
+#H12 {background-position: -1648px -464px;}
+#H13 {background-position: -1812px -464px;}
+#H1 {background-position: -1978px -464px;}
+
+
+#S2 {background-position: -2px -695px;}
+#S3 {background-position: -168px -695px;}
+#S4 {background-position: -332px -695px;}
+#S5 {background-position: -498px -695px;}
+#S6 {background-position: -661px -695px;}
+#S7 {background-position: -825px -695px;}
+#S8 {background-position: -990px -695px;}
+#S9 {background-position: -1156px -695px;}
+#S10 {background-position: -1320px -695px;}
+#S11 {background-position: -1483px -694px;}
+#S12 {background-position: -1648px -694px;}
+#S13 {background-position: -1812px -694px;}
+#S1 {background-position: -1978px -695px;}
+
+#C2 {
+    background-position: -3px -232px;
+}
+
+#C3 {
+    background-position: -168px -232px;
+}
+
+#H2 {
+    background-position: -2px -464px;
+}
+
+#C8 {
+    background-position: -990px -695px;
+}
+
+
+/* Class for Bebas Neue font */
+.bebas-neue-regular {
+    font-family: "Bebas Neue", sans-serif;
+    font-weight: 40;
+    font-style: normal;
+}
+
+/* Class for Sixtyfour Convergence font */
+.sixtyfour-convergence-regular {
+    font-family: "Sixtyfour Convergence", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-variation-settings:
+        "BLED" 0,
+        "SCAN" 0,
+        "XELA" 0,
+        "YELA" 0;
+}
+
+  
+body {
+    font-family: "Sixtyfour Convergence", sans-serif;
+    background-color: #2E7D32;
+    color: white;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+}
+
+h1 {
+    margin-top: 20px;
+    font-size: 2.5rem;
+}
+
+.game-board {
+    position: relative;
+    width: 90%;
+    max-width: 1200px;
+    height: auto;
+    border: 2px solid #fff;
+    border-radius: 10px;
+    background-color: #1B5E20; 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+}
+
+#dealerArea {
+    text-align: center;
+    padding: 10px;
+    border-bottom: 2px solid #fff;
+}
+
+#playerArea {
+    text-align: center;
+    padding: 10px;
+}
+
+
+#playerHand, #dealerHand {
+    display: inline-block;
+    width: auto; 
+    height: 215px; 
+    padding: 0px;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+button {
+    padding: 10px 15px;
+    font-size: 1rem;
+    background-color: #FFC107; 
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #000;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #FFA000; 
+}
+
+#messageArea {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    border-radius: 5px;
+    width: 200px;
+}
+
+#cardCount {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    border-radius: 5px;
+}
+
+
+.card-container {
+    display: flex;          
+    flex-wrap: nowrap;
+    justify-content: flex-start; 
+    padding: 10px;        
+}
+
+.card {
+    width: 40px;          
+    height: 70px;        
+    margin-right: 5px;    
+    background-color: white; 
+    border: 1px solid #000; 
+    border-radius: 5px;    
+    display: flex;          
+    align-items: center;    
+    justify-content: center; 
+}
+
+.message-area {
+    position: fixed;             
+    top: 10px;                
+    right: 10px;               
+    height: 50px;       
+    width: 250px;               
+    overflow-y: auto;           
+    border: 1px solid #ccc;   
+    padding: 10px;              
+    background-color: #f9f9f9;  
+    z-index: 1000;              
+}
+
+
+@keyframes slideIn {
+    from {
+        transform: translateX(-1000px); /* Start from off-screen to the left */
+        opacity: 0; /* Start with invisible */
+    }
+    to {
+        transform: translateX(0); /* End at the final position */
+        opacity: 1; /* Fully visible */
+    }
+}
+
+
+
+
+
+
+/* Index.html */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+
+body.blackjack-entry {
+    font-family: "Sixtyfour Convergence", sans-serif;
+    background-color: #0b0b0d;
+    background-size: cover;
+    color: white;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.entry-container {
+    background-color: rgba(0, 0, 0, 0.8); 
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    width: 300px;
+}
+
+
+h1.bebas-neue-regular {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 3rem;
+    margin-bottom: 20px;
+    color: #ffc107; 
+}
+
+
+label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+    color: #fff;
+}
+
+
+.username-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: none;
+    font-size: 1rem;
+    box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.1);
+    background-color: #333;
+    color: #fff;
+    font-family: 'Sixtyfour Convergence', sans-serif;
+}
+
+
+.start-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #ffc107;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    font-family: 'Bebas Neue', sans-serif;
+    color: #000;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.start-button:hover {
+    background-color: #ffa000; 
+}
+
+.start-button {
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+/* FOR SHUFFLING */
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 999; /* Stay on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Black background with opacity */
+}
+
+.modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    text-align: center;
+    border-radius: 5px;
+}
+
+.loader {
+    border: 8px solid #f3f3f3; /* Light grey */
+    border-top: 8px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
