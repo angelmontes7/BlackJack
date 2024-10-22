@@ -82,6 +82,103 @@ var gamePlay = {
 
     },
 
+    getMoveXHR: function() {
+        // Creates instance to interact with the server
+        const xhr = new XMLHttpRequest();
+
+        // Gets the scores of player and dealer
+        const userScore = blackjack.player.userhand.getScore();
+        const dealerScore = blackjack.dealer.getScore();
+
+        // Inputs the scores of both into the url to send to the server
+        const url = `https://convers-e.com/blackjackadvice.php?userscore=${userScore}&dealerscore=${dealerScore}`;
+
+        // Initializes a new asynchronous HTTP GET request to the specified URL
+        xhr.open("GET", url, true);
+
+        // Store reference to the current context
+        const self = this;
+        
+        // waits for response once received readystate changes and executes code
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) { // Check the request state (4 = Completed)
+                if (xhr.status === 200) { // Checks the HTTP status code (200 = success)
+                    const response = JSON.parse(xhr.responseText); // Uses the JSON format and parses it into a JavaScript object
+                    console.log("Full XHR response:", response); // Log full response for debugging
+                    addMessage(`Advice (XHR): ${response.content.Advice}`); // Adds message to div based on server output
+    
+                    // Passes the advice from the response triggering the games logic
+                    self.Blackjack.getRemoteAdvice(response.content.Advice);
+                } else {
+                    addMessage("An error occurred. Please try again.");
+                }
+            }
+        };
+        // Sends request to server
+        xhr.send();
+    },
+    
+    getMoveJQuery: function() {
+        // Gets the scores of player and dealer
+        const userScore = blackjack.player.userhand.getScore();
+        const dealerScore = blackjack.dealer.getScore();
+
+        // Inputs the scores of both into the url to send to the server
+        const url = `https://convers-e.com/blackjackadvice.php?userscore=${userScore}&dealerscore=${dealerScore}`;
+        
+        // Makes a GET request to the specified "url" the response parameter contains the servers response
+        $.get(url, function(response) {
+            console.log("Full jQuery response:", response); // Log full response for Debugging
+            
+            // Access the advice from the server (advice is embedded in the content)
+            const advice = response.content.Advice;
+            
+            // Checks if advice was successfully retrieved 
+            if (advice) {
+                addMessage(`Advice (jQuery): ${advice}`); // Adds message to div based on server output
+                gamePlay.Blackjack.getRemoteAdvice(advice); // Execute the move based on the advice
+            } else {
+                addMessage("Advice not found in the response.");
+                console.error("Advice is missing or response format is different:", response);
+            }
+        }).fail(function() { // Callback that is executed if the GET request fails for any reason
+            addMessage("An error occurred. Please try again.");
+        });
+    },
+    
+    getMoveFetch: function() {
+        // Gets the scores of player and dealer
+        const userScore = blackjack.player.userhand.getScore(); 
+        const dealerScore = blackjack.dealer.getScore();   
+        
+        // Inputs the scores of both into the url to send to the server
+        const url = `https://convers-e.com/blackjackadvice.php?userscore=${userScore}&dealerscore=${dealerScore}`;
+        
+        // Makes HTTP request
+        fetch(url)
+            .then(response => {
+                // Checks if the response was successful
+                if (!response.ok) {
+                    throw new Error(`Network response was not ok, status: ${response.status}`);
+                }
+                console.log("Full Fetch response:", response); // Log full response for Debugging
+
+                // Converts and returns the JSON string into JavaScript Object
+                return response.json();
+            })
+
+            // Handles the data returned by the " return response.json();"
+            .then(data => {
+                const advice = data.content.Advice; // Gets the advice that was extracted from the server
+                addMessage(`Advice (Fetch): ${advice}`); // Adds message to div based on server output
+                gamePlay.Blackjack.getRemoteAdvice(advice); // Execute the move based on the advice
+            })
+            // Handles the errors
+            .catch(error => {
+                addMessage("An error occurred. Please try again.");
+                console.error("Fetch Error:", error);
+            });
+    },
 
     // Helper functions below
 

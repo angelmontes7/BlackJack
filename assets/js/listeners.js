@@ -53,5 +53,23 @@ document.getElementById("stayButton").addEventListener("click", function() {
     }
 });
 
+// XHR button event listener
+document.getElementById("xhr-button").addEventListener("click", function() {
+    if (isGameInPlay) { // Check if it's the user's turn
+        gamePlay.getMoveXHR(); // Call the method to get advice using XHR
+    }
+});
 
+// jQuery button event listener
+document.getElementById("jquery-button").addEventListener("click", function() {
+    if (isGameInPlay) { // Check if it's the user's turn
+        gamePlay.getMoveJQuery(); // Call the method to get advice using jQuery
+    }
+});
 
+// Fetch API button event listener
+document.getElementById("fetch-button").addEventListener("click", function() {
+    if (isGameInPlay) { // Check if it's the user's turn
+        gamePlay.getMoveFetch(); // Call the method to get advice using Fetch API
+    }
+});

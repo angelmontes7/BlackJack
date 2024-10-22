@@ -160,7 +160,7 @@ h1 {
 .controls {
     display: flex;
     justify-content: center;
-    gap: 50px;
+    gap: 35px;
     margin-top: 15px;
     margin-bottom: 15px;
 }

@@ -309,7 +309,15 @@ var blackjack = {
         return this.player.userhand.getScore() === 21;
     },
 
-
+    // Called in the app.js file and links the ajax calls to the rest of the program
+    getRemoteAdvice: function(advice) {
+        if (advice.toLowerCase() === "hit") {
+            this.hit(); // Perform hit action if advice is to hit
+        } else if (advice.toLowerCase() === "stay") {
+            this.stay(); // Perform stay action if advice is to stay
+        }
+    },
+    
     // Helper Function to have the dealer draw cards if user is winning
     stay: function() {
         this.player.userhand.isTurnEnded = true; // End player's turn
