@@ -87,6 +87,7 @@
 
 
 /* Class for Bebas Neue font */
+.message-board-title,
 .bebas-neue-regular {
     font-family: "Bebas Neue", sans-serif;
     font-weight: 40;
@@ -122,6 +123,14 @@ body {
 h1 {
     margin-top: 20px;
     font-size: 2.5rem;
+}
+
+.game-container {
+    display: flex;             
+    justify-content: space-between; 
+    width: 90%;                
+    max-width: 1200px;       
+    margin: 0 auto;            
 }
 
 .game-board {
@@ -160,10 +169,11 @@ h1 {
 .controls {
     display: flex;
     justify-content: center;
-    gap: 35px;
+    gap: 25px;
     margin-top: 15px;
     margin-bottom: 15px;
 }
+
 
 button {
     padding: 10px 15px;
@@ -221,9 +231,9 @@ button:hover {
 
 .message-area {
     position: fixed;             
-    top: 10px;                
+    top: 105px;                
     right: 10px;               
-    height: 50px;       
+    height: 595px;       
     width: 250px;               
     overflow-y: auto;           
     border: 1px solid #ccc;   
@@ -231,7 +241,6 @@ button:hover {
     background-color: #f9f9f9;  
     z-index: 1000;              
 }
-
 
 @keyframes slideIn {
     from {

@@ -21,7 +21,13 @@ function removeClass(element, className) {
 
 function addMessage(msg) {
     const messageArea = document.getElementById('messageArea');
-    messageArea.textContent = msg; // Update the message area with the new message
+    
+    // Create a new paragraph element for the message
+    const newMessage = document.createElement('p'); 
+    newMessage.textContent = msg; // Set the message text
+
+    // Prepend the new message to the message area
+    messageArea.prepend(newMessage);
 }
 
 // clearMessages – Removes all messages from the message div.

@@ -21,20 +21,19 @@
     <div id="usernameDisplay" class="username-display"></div>
 
     <!-- Game Board -->
-    <div class="game-board">
-        <div id="dealerArea">
-            <h2 class="bebas-neue-regular">Dealer's Hand</h2>
-            <div class="card-container" id="dealerHand"></div>
-        </div>
-        
-        <div id="playerArea">
-            <h2 class="bebas-neue-regular">Player's Hand</h2>
-            <div class="card-container" id="playerHand"></div>
+    <div class="game-container">
+        <div class="game-board">
+            <div id="dealerArea">
+                <h2 class="bebas-neue-regular">Dealer's Hand</h2>
+                <div class="card-container" id="dealerHand"></div>
+            </div>
+            
+            <div id="playerArea">
+                <h2 class="bebas-neue-regular">Player's Hand</h2>
+                <div class="card-container" id="playerHand"></div>
+            </div>
         </div>
     </div>
-
-    <!-- Message Area -->
-    <div id="messageArea" class="message-area"></div>
 
     <!-- Bet and Wallet Area -->
     <div id="currentBet" class="bet-display">Current Bet: $0</div>
@@ -60,6 +59,9 @@
         Cards left in the deck: <span id="cardsLeftCount">52</span>
     </div>
 
+    <!-- Message Area -->
+    <div id="messageArea" class="message-area"></div>
+    
     <div id="shufflingModal" class="modal">
         <div class="modal-content">
             <p>Shuffling cards...</p>
