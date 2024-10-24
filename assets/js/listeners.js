@@ -53,23 +53,32 @@ document.getElementById("stayButton").addEventListener("click", function() {
     }
 });
 
-// XHR button event listener
-document.getElementById("xhr-button").addEventListener("click", function() {
-    if (isGameInPlay) { // Check if it's the user's turn
-        gamePlay.getMoveXHR(); // Call the method to get advice using XHR
-    }
-});
+// Listeners using jQuery selectors for the AJAX buttons
+$(document).ready(function() {
+    // Event listener for XHR request
+    $("#xhr-button").on("click", function() {
+        if (isGameInPlay) {  // Only allow if the game is in play
+            gamePlay.getMoveXHR();
+        } else {
+            addMessage("You can't request advice until the game is in play.");
+        }
+    });
 
-// jQuery button event listener
-document.getElementById("jquery-button").addEventListener("click", function() {
-    if (isGameInPlay) { // Check if it's the user's turn
-        gamePlay.getMoveJQuery(); // Call the method to get advice using jQuery
-    }
-});
+    // Event listener for jQuery request
+    $("#jquery-button").on("click", function() {
+        if (isGameInPlay) {  // Only allow if the game is in play
+            gamePlay.getMoveJQuery();
+        } else {
+            addMessage("You can't request advice until the game is in play.");
+        }
+    });
 
-// Fetch API button event listener
-document.getElementById("fetch-button").addEventListener("click", function() {
-    if (isGameInPlay) { // Check if it's the user's turn
-        gamePlay.getMoveFetch(); // Call the method to get advice using Fetch API
-    }
+    // Event listener for Fetch request
+    $("#fetch-button").on("click", function() {
+        if (isGameInPlay) {  // Only allow if the game is in play
+            gamePlay.getMoveFetch();
+        } else {
+            addMessage("You can't request advice until the game is in play.");
+        }
+    });
 });
