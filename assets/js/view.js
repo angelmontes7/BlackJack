@@ -137,3 +137,10 @@ function updateWalletDisplay() {
     }
 }
 
+function displayUsername() {
+    const username = gamePlay.getUsername()
+    gamePlay.Blackjack.player.username = username; // Set the username in the player object
+    document.getElementById('usernameDisplay').textContent = `Player: ${username}`;
+    return username;
+}
+

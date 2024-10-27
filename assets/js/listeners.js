@@ -13,15 +13,26 @@ document.getElementById("resetButton").addEventListener("click", function() {
 
 // Bet Increment button event listener
 document.getElementById("incrementButton").addEventListener("click", function() {
-    if (!isGameInPlay) {
-        gamePlay.incrementBet(); // Function to increase the bet
+    if (isGameInPlay) {
+        addMessage("Game is in play. You can't adjust the bet right now.");
+    } else if (currentBet + 10 <= blackjack.player.userWallet.getValue()) {
+        currentBet += 10;
+        updateBetDisplay(currentBet); // Update bet display
+    } else {
+        addMessage("Cannot exceed wallet amount.");
     }
 });
 
+
 // Bet Decrement button event listener
 document.getElementById("decrementButton").addEventListener("click", function() {
-    if (!isGameInPlay) {
-        gamePlay.decrementBet(); // Function to decrease the bet
+    if (isGameInPlay) {
+        addMessage("Game is in play. You can't adjust the bet right now."); 
+    }else if (!isGameInPlay && currentBet - 10 >= 100) { // Minimum bet is $100
+        currentBet -= 10;
+        updateBetDisplay(currentBet); // Update bet display
+    } else {
+        addMessage("Minimum bet is $100.");
     }
 });
 
@@ -58,7 +69,7 @@ $(document).ready(function() {
     // Event listener for XHR request
     $("#xhr-button").on("click", function() {
         if (isGameInPlay) {  // Only allow if the game is in play
-            gamePlay.getMoveXHR();
+            blackjack.getMoveXHR();
         } else {
             addMessage("You can't request advice until the game is in play.");
         }
@@ -67,7 +78,7 @@ $(document).ready(function() {
     // Event listener for jQuery request
     $("#jquery-button").on("click", function() {
         if (isGameInPlay) {  // Only allow if the game is in play
-            gamePlay.getMoveJQuery();
+            blackjack.getMoveJQuery();
         } else {
             addMessage("You can't request advice until the game is in play.");
         }
@@ -76,7 +87,7 @@ $(document).ready(function() {
     // Event listener for Fetch request
     $("#fetch-button").on("click", function() {
         if (isGameInPlay) {  // Only allow if the game is in play
-            gamePlay.getMoveFetch();
+            blackjack.getMoveFetch();
         } else {
             addMessage("You can't request advice until the game is in play.");
         }
