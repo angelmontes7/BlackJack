@@ -280,8 +280,6 @@ var blackjack = {
         }
 
         if (this.didPlayerBust()) {
-            console.log("Player busted!");
-            addMessage("You bust! Dealer wins.");
             revealDealerFaceDownCard();
             isGameInPlay = false; // End game if the player busts
             gamePlay.isGameOver();
