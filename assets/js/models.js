@@ -307,6 +307,30 @@ var blackjack = {
         return this.player.userhand.getScore() === 21;
     },
 
+    stay: function() {
+        this.player.userhand.isTurnEnded = true; // End player's turn
+        addMessage("Your turn has ended. Dealer's turn now.");
+        isGameInPlay = false; // End game if the player busts
+
+        // Reveals the dealers face down card
+        revealDealerFaceDownCard();
+
+         // Dealer plays their turn
+         while (blackjack.dealer.getScore() < this.dealersHitLimit) { // Dealer hits if value is less than 16
+            let card = blackjack.carddeck.dealCard(); // Deal a card to the dealer
+            blackjack.dealer.addCard(card); // Add it to the dealer's hand
+            console.log(`Dealer hits and receives: ${card.getRank()} of ${card.getSuit()}`);
+            showDealtCard(blackjack.dealer, false); // Show the new card
+        }
+
+        updateCardsLeftDisplay(); 
+        
+        // Determine winner
+        gamePlay.isGameOver();
+    },
+
+    // AJAX BUTTONS AND IMPLEMENTATION ---------------------------------------------------------------------------
+
     // Called in the app.js file and links the ajax calls to the rest of the program
     getRemoteAdvice: function(advice) {
         if (advice.toLowerCase() === "hit") {
@@ -316,17 +340,13 @@ var blackjack = {
         }
     },
     
+    
     // AJAX button implementation
     getMoveXHR: function() {
         // Creates instance to interact with the server
         const xhr = new XMLHttpRequest();
 
-        // Gets the scores of player and dealer
-        const userScore = this.player.userhand.getScore();
-        const dealerScore = this.dealer.getScore();
-
-        // Inputs the scores of both into the url to send to the server
-        const url = `https://convers-e.com/blackjackadvice.php?userscore=${userScore}&dealerscore=${dealerScore}`;
+        url = this.createScoreUrl()
 
         // Initializes a new asynchronous HTTP GET request to the specified URL
         xhr.open("GET", url, true);
@@ -354,13 +374,9 @@ var blackjack = {
     },
     
     getMoveJQuery: function() {
-        // Gets the scores of player and dealer
-        const userScore = this.player.userhand.getScore();
-        const dealerScore = this.dealer.getScore();
-
-        // Inputs the scores of both into the url to send to the server
-        const url = `https://convers-e.com/blackjackadvice.php?userscore=${userScore}&dealerscore=${dealerScore}`;
         
+        url = this.createScoreUrl()
+
         // Makes a GET request to the specified "url" the response parameter contains the servers response
         $.get(url, function(response) {
             console.log("Full jQuery response:", response); // Log full response for Debugging
@@ -382,13 +398,9 @@ var blackjack = {
     },
     
     getMoveFetch: function() {
-        // Gets the scores of player and dealer
-        const userScore = this.player.userhand.getScore(); 
-        const dealerScore = this.dealer.getScore();   
         
-        // Inputs the scores of both into the url to send to the server
-        const url = `https://convers-e.com/blackjackadvice.php?userscore=${userScore}&dealerscore=${dealerScore}`;
-        
+        url = this.createScoreUrl()
+
         // Makes HTTP GET request
         fetch(url)
             .then(response => {
@@ -415,26 +427,41 @@ var blackjack = {
             });
     },
 
-    // Helper Function to have the dealer draw cards if user is winning
-    stay: function() {
-        this.player.userhand.isTurnEnded = true; // End player's turn
-        addMessage("Your turn has ended. Dealer's turn now.");
-        isGameInPlay = false; // End game if the player busts
+    createScoreUrl: function(){
+        // Gets the scores of player and dealer
+        const userScore = blackjack.player.userhand.getScore();
 
-        // Reveals the dealers face down card
-        revealDealerFaceDownCard();
-
-         // Dealer plays their turn
-         while (blackjack.dealer.getScore() < this.dealersHitLimit) { // Dealer hits if value is less than 16
-            let card = blackjack.carddeck.dealCard(); // Deal a card to the dealer
-            blackjack.dealer.addCard(card); // Add it to the dealer's hand
-            console.log(`Dealer hits and receives: ${card.getRank()} of ${card.getSuit()}`);
-            showDealtCard(blackjack.dealer, false); // Show the new card
-        }
-
-        updateCardsLeftDisplay(); 
+        const dealerHand = blackjack.dealer.cards[1];
+        const dealerScore = dealerHand.getCardNumber(); // Sending only the faceup card  
         
-        // Determine winner
-        gamePlay.isGameOver();
+        // Inputs the scores of both into the url to send to the server
+        return `https://convers-e.com/blackjackadvice.php?userscore=${userScore}&dealerscore=${dealerScore}`;
     },
+
+    getRemoteMove: function () {
+        // Gets the scores of player and dealer
+        const userScore = blackjack.player.userhand.getScore();
+        const dealerHand = blackjack.dealer.cards[1];
+        const dealerScore = dealerHand.getCardNumber(); // Sending only the faceup card
+
+        console.log(`User Score: ${userScore}, Dealer Score: ${dealerScore}`); // Log the scores for debugging
+
+        url = `http://127.0.0.1:3000/?userscore=${userScore}&dealerscore=${dealerScore}`
+
+        $.get(url, (response) => {
+        if (response.status === 'Success') {
+            // Call getRemoteAdvice with the received advice
+            this.getRemoteAdvice(response.content.Advice);
+            addMessage(`Advice (RemoteMove): ${response.content.Advice}`); // Adds message to div based on server output
+        } else {
+            addMessage(response.message);
+        }
+        }).fail((jqXHR, textStatus, errorThrown) => {
+        console.error('Error occurred:', textStatus, errorThrown); // Log the error details
+        addMessage('Server is not active. Please try again later.'); // Display custom message
+        })
+    }
+
+    // END OF AJAX BUTTONS AND IMPLEMENTATION ---------------------------------------------------------------------------
+
 };

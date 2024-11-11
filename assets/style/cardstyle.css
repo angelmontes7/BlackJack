@@ -120,10 +120,22 @@ body {
     height: 100vh;
 }
 
+.container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 10px;
+}
+
 h1 {
     margin-top: 20px;
     font-size: 2.5rem;
 }
+
 
 .game-container {
     display: flex;             
@@ -166,13 +178,6 @@ h1 {
     padding: 0px;
 }
 
-.controls {
-    display: flex;
-    justify-content: center;
-    gap: 25px;
-    margin-top: 15px;
-    margin-bottom: 15px;
-}
 
 
 button {
@@ -252,6 +257,41 @@ button:hover {
         opacity: 1; /* Fully visible */
     }
 }
+
+.controls-container {
+    display: flex;
+    justify-content: space-evenly; 
+    width: 100%;
+}
+
+.left-controls, .right-controls {
+    display: flex;
+    margin: 0 10px;
+    box-shadow: 0 0 20px red; 
+}
+
+
+.left-controls {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); 
+    grid-template-rows: repeat(2, auto);   
+    gap: 10px;                             
+    margin-bottom: 15px;
+}
+
+.right-controls {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); 
+    grid-template-rows: repeat(2, auto);   
+    gap: 10px;                            
+}
+
+
+.left-controls button, .right-controls button {
+    margin-bottom: 10px; 
+}
+
+
 
 
 
@@ -349,14 +389,14 @@ label {
 /* FOR SHUFFLING */
 
 .modal {
-    display: none; /* Hidden by default */
+    display: none; 
     position: fixed;
-    z-index: 999; /* Stay on top */
+    z-index: 999; 
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7); /* Black background with opacity */
+    background-color: rgba(0, 0, 0, 0.7); 
 }
 
 .modal-content {
@@ -371,8 +411,8 @@ label {
 }
 
 .loader {
-    border: 8px solid #f3f3f3; /* Light grey */
-    border-top: 8px solid #3498db; /* Blue */
+    border: 8px solid #f3f3f3; 
+    border-top: 8px solid #3498db; 
     border-radius: 50%;
     width: 50px;
     height: 50px;

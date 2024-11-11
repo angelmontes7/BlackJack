@@ -93,3 +93,14 @@ $(document).ready(function() {
         }
     });
 });
+
+
+$('#remoteMoveButton').on('click', (event) => {
+    if (isGameInPlay) {
+        blackjack.getRemoteMove();
+    } else {
+        addMessage("You can't request advice until the game is in play.");
+    }
+});
+  
+  
