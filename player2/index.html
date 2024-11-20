@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blackjack - Start Game</title>
+
+    <!-- Google Fonts for Bebas Neue and Sixtyfour Convergence -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Sixtyfour+Convergence&display=swap" rel="stylesheet">
+
+    <!-- Link to external CSS -->
+    <link rel="stylesheet" href="assets/style/cardstyle.css">
+    <link rel="stylesheet" href="assets/style/styles.css">
+</head>
+<body class="blackjack-entry">
+    <div class="entry-container">
+        <h1 class="bebas-neue-regular">Welcome to Blackjack</h1>
+        <form action="gameplay.html" method="GET" class="start-form">
+            <label for="username">Enter Username:</label>
+            <input type="text" id="username" name="username" required pattern="[A-Za-z]{4,20}" title="4-20 letters only" class="username-input">
+            <input type="submit" value="Start Game" class="start-button">
+        </form>
+    </div>
+    <script src="assets/js/app.js" type="text/javascript"></script>
+</body>
+</html>
