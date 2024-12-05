@@ -6,6 +6,17 @@
 // Assuming we have a variable to track the game state
 
 
+
+// Add ready button listener
+document.getElementById("readyButton").addEventListener("click", function() {
+    if (!thisPlayerReady) {
+        thisPlayerReady = true;
+        this.disabled = true;
+        this.textContent = "Ready!";
+        window.socketHandler.emitReadyStatus();
+    }
+});
+
 // Reset button event listener
 document.getElementById("resetButton").addEventListener("click", function() {
     gamePlay.resetGame(); // Function to reset the game
@@ -38,6 +49,12 @@ document.getElementById("decrementButton").addEventListener("click", function() 
 
 // Deal button event listener
 document.getElementById("dealButton").addEventListener("click", function() {
+
+    if (!bothPlayersReady) {
+        addMessage("Waiting for all players to be ready!");
+        return;
+    }
+    
     if (!isGameInPlay && currentBet >= 100) { // Ensure minimum bet is $100
         gamePlay.startRound(); // Function to start the game
         isGameInPlay = true; // Set game state to in play
@@ -52,54 +69,16 @@ document.getElementById("dealButton").addEventListener("click", function() {
 
 // Hit button event listener
 document.getElementById("hitButton").addEventListener("click", function() {
-    if (isGameInPlay) { // Check if it's the user's turn
-        blackjack.hit(); // Function to deal a card to the player
+    if (isGameInPlay) {
+        blackjack.hit()
     }
 });
+
 
 // Stay button event listener
 document.getElementById("stayButton").addEventListener("click", function() {
     if (isGameInPlay) { // Check if it's the user's turn
         blackjack.stay();
-    }
-});
-
-// Listeners using jQuery selectors for the AJAX buttons
-$(document).ready(function() {
-    // Event listener for XHR request
-    $("#xhr-button").on("click", function() {
-        if (isGameInPlay) {  // Only allow if the game is in play
-            blackjack.getMoveXHR();
-        } else {
-            addMessage("You can't request advice until the game is in play.");
-        }
-    });
-
-    // Event listener for jQuery request
-    $("#jquery-button").on("click", function() {
-        if (isGameInPlay) {  // Only allow if the game is in play
-            blackjack.getMoveJQuery();
-        } else {
-            addMessage("You can't request advice until the game is in play.");
-        }
-    });
-
-    // Event listener for Fetch request
-    $("#fetch-button").on("click", function() {
-        if (isGameInPlay) {  // Only allow if the game is in play
-            blackjack.getMoveFetch();
-        } else {
-            addMessage("You can't request advice until the game is in play.");
-        }
-    });
-});
-
-
-$('#remoteMoveButton').on('click', (event) => {
-    if (isGameInPlay) {
-        blackjack.getRemoteMove();
-    } else {
-        addMessage("You can't request advice until the game is in play.");
     }
 });
   

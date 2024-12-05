@@ -3,11 +3,12 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blackjack Game</title>
+    <meta name="player-number" content="2">
+    <title>Blackjack Game Player 2</title>
     
     <!-- Link to external CSS -->
-    <link rel="stylesheet" href="assets/style/cardstyle.css">
-    <link rel="stylesheet" href="assets/style/styles.css">
+    <link rel="stylesheet" href="/player2/assets/style/cardstyle.css">
+    <link rel="stylesheet" href="/player2/assets/style/styles.css">
     
     <!-- Google Fonts for Bebas Neue and Sixtyfour Convergence -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,51 +25,61 @@
         <!-- Game Board -->
         <div class="game-container">
             <div class="game-board">
+                <!-- Dealer's Area -->
                 <div id="dealerArea">
                     <h2 class="bebas-neue-regular">Dealer's Hand</h2>
                     <div class="card-container" id="dealerHand"></div>
                 </div>
                 
-                <div id="playerArea">
-                    <h2 class="bebas-neue-regular">Player's Hand</h2>
-                    <div class="card-container" id="playerHand"></div>
+                <!-- Game Status Display -->
+                <div id="gameStatus" class="game-status">
+                    <div id="currentBet" class="bet-display">Current Bet: $0</div>
+                    <div id="walletDisplay" class="wallet-display">Wallet: $1000</div>
+                    <div id="cardsLeftArea" class="cards-left-display">
+                        Cards left: <span id="cardsLeftCount">52</span>
+                    </div>
+                </div>
+
+                <!-- Player Areas -->
+                <div class="players-container">
+                    <!-- Your Hand -->
+                    <div id="playerArea" class="player-section">
+                        <h2 class="bebas-neue-regular">Your Hand</h2>
+                        <div class="card-container" id="playerHand"></div>
+                    </div>
+
+                    <!-- Opponent's Hand -->
+                    <div id="opponentArea" class="player-section">
+                        <h2 class="bebas-neue-regular">Opponent's Hand</h2>
+                        <div class="card-container" id="opponentHand"></div>
+                        <div id="opponentStatus" class="opponent-status"></div>
+                    </div>
                 </div>
             </div>
         </div>
-
-        <!-- Bet and Wallet Area -->
-        <div id="currentBet" class="bet-display">Current Bet: $0</div>
-        <div id="walletDisplay" class="wallet-display">Wallet: $1000</div>
 
         <!-- Controls Container -->
         <div class="controls-container">
             <!-- Left Controls (AJAX and Remote Move) -->
             <div class="left-controls">
-                <button id="remoteMoveButton">Remote Move</button>
-                <button id="xhr-button">Get Move (XHR)</button>
-                <button id="jquery-button">Get Move (jQuery)</button>
-                <button id="fetch-button">Get Move (Fetch API)</button>
-            </div>
-
-            <!-- Right Controls (Other Game Buttons) -->
-            <div class="right-controls">
                 <button id="hitButton">Hit</button>
                 <button id="dealButton">Deal</button>
                 <button id="incrementButton">Increase Bet</button>
+            </div>
+
+            <!-- Right Controls (Game Buttons) -->
+            <div class="right-controls">
                 <button id="decrementButton">Decrease Bet</button>
                 <button id="resetButton">Reset</button>
                 <button id="stayButton">Stay</button>
+                <button id="readyButton" class="game-button">Ready</button>
             </div>
-        </div>
-
-        <!-- Card Count -->
-        <div id="cardsLeftArea" class="cards-left-display">
-            Cards left in the deck: <span id="cardsLeftCount">52</span>
         </div>
 
         <!-- Message Area -->
         <div id="messageArea" class="message-area"></div>
         
+        <!-- Shuffling Modal -->
         <div id="shufflingModal" class="modal">
             <div class="modal-content">
                 <p>Shuffling cards...</p>
@@ -77,10 +88,14 @@
         </div>
     </div>
 
+    <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-    <script src="assets/js/models.js" type="text/javascript"></script>
-    <script src="assets/js/view.js" type="text/javascript"></script>
-    <script src="assets/js/listeners.js" type="text/javascript"></script>
-    <script src="assets/js/app.js" type="text/javascript"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/Backend/server/carddeck.js"></script>
+    <script src="/player2/assets/js/mySocket.js"></script>
+    <script src="/player2/assets/js/models.js"></script>
+    <script src="/player2/assets/js/view.js"></script>
+    <script src="/player2/assets/js/listeners.js"></script>
+    <script src="/player2/assets/js/app.js"></script>
 </body>
 </html>

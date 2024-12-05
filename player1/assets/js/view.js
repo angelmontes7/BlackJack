@@ -38,12 +38,47 @@ function clearMessages() {
     }
 }
 
-// setUsername – Displays username on the game page.
-function setUsername(userName) {
-    var usernameDisplay = document.getElementById("usernameDisplay"); // Get the username display element
-    if (usernameDisplay) {
-        usernameDisplay.innerHTML = "Welcome, " + userName + "!"; // Display the username with a welcome message
+function setUsername(username) {
+    // Check if the username is provided
+    if (!username) {
+        alert('Username is required!');
+        return;
     }
+
+    // Prepare data to send to the server
+    const data = {
+        username: username
+    };
+    console.log("Before fetch statement")
+    // Send POST request to the server using fetch
+    fetch('http://127.0.0.1:3000/username', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data) // Send the username as JSON
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.text(); // Return the response message
+        } else {
+            throw new Error('Failed to save username');
+        }
+    })
+    .then(responseMessage => {
+        console.log(responseMessage); // Log the server response
+        if (responseMessage === 'User added successfully') {
+            // If the user was added successfully, redirect to gameplay page
+            window.location.href = '/gameplay.html?username=' + encodeURIComponent(username);
+        } else if (responseMessage === 'User exists') {
+            // If the user already exists, display a message
+            alert('Username already exists!');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error saving username. Please try again.');
+    });
 }
 
 // resetView - Resets the game board.
@@ -113,7 +148,12 @@ function getCardId(card) {
 }
 
 function updateCardsLeftDisplay() {
-    document.getElementById("cardsLeftCount").innerText = blackjack.carddeck.cardsLeft;
+    const sharedDeck = getSharedDeck();
+    if (sharedDeck && typeof sharedDeck.cardsLeft !== 'undefined') {
+      document.getElementById("cardsLeftCount").innerText = sharedDeck.cardsLeft;
+    } else {
+      console.error("Shared deck or cardsLeft property is undefined");
+    }
 }
 
 function resetBetDisplay() {
