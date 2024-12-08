@@ -10,11 +10,17 @@ document.addEventListener('DOMContentLoaded', function () {
             return response.json(); // Parse JSON response
         })
         .then((highscores) => {
+            // Sort the highscores by score in descending order
+            highscores.sort((a, b) => b.highScore - a.highScore);
+
+            // Get the top 5 high scores
+            const top5Scores = highscores.slice(0, 5);
+
             // Clear existing rows
             highscoresTableBody.innerHTML = '';
 
-            // Populate the table with high scores
-            highscores.forEach((score, index) => {
+            // Populate the table with the top 5 high scores
+            top5Scores.forEach((score, index) => {
                 const row = document.createElement('tr');
 
                 // Create cells for rank, username, and high score

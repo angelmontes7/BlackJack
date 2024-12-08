@@ -8,7 +8,7 @@ const dbManager = require('./dbmgr');
 const hostname = '127.0.0.1';
 const port = 3000;
 
-app.use(express.json()); // This is the key part that allows Express to parse JSON
+app.use(express.json());
 
 // Setup the database
 dbManager.testConnection();

@@ -96,11 +96,6 @@ const initializeWebSockets = (server) => {
           // After assigning player number, increment for the next player
           nextPlayerNumber = nextPlayerNumber === 1 ? 2 : 1;
 
-          // Automatically mark the first player as ready
-          if (connectedPlayers.size === 1) {
-              readyPlayers.add(socket.id);
-          }
-
           socket.emit('playerNumber', playerNumber); // Send the player number to the client
           io.emit('playerCountUpdate', connectedPlayers.size);
       });
@@ -124,11 +119,15 @@ const initializeWebSockets = (server) => {
       // Handle dealing cards
       socket.on('dealRequest', (data) => {
           const deck = cardDeck.getSharedDeck();
-          
+          const isSinglePlayer = connectedPlayers.size === 1;
+          const requestingPlayer = connectedPlayers.get(socket.id);
+
           // Deal cards
           const dealerCards = [deck.dealCard(), deck.dealCard()];
           const player1Cards = [deck.dealCard(), deck.dealCard()];
-          const player2Cards = [deck.dealCard(), deck.dealCard()];
+          
+          // Only deal player2 cards if in multiplayer mode
+          const player2Cards = !isSinglePlayer ? [deck.dealCard(), deck.dealCard()] : [];
 
           // Broadcast deal to all players
           io.emit('dealResponse', {
@@ -145,6 +144,14 @@ const initializeWebSockets = (server) => {
                   rank: card.getRank()
               }))
           });
+          // Store dealer's cards in game state
+          gameState.dealerCards = dealerCards;
+
+          // Reset game state for the new round
+          gameState.playersFinished.clear();
+
+          // Notify all players to start new round
+          io.emit('roundStart');
       });
 
       // Listen for player moves

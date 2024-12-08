@@ -3,14 +3,14 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="player-number" content="2">
+    <meta name="player-number" content="1">
     <title>Blackjack Game Player 1</title>
     
     <!-- Link to external CSS -->
     <link rel="stylesheet" href="/player1/assets/style/cardstyle.css">
     <link rel="stylesheet" href="/player1/assets/style/styles.css">
     
-    <!-- Google Fonts for Bebas Neue and Sixtyfour Convergence -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Sixtyfour+Convergence&display=swap" rel="stylesheet">
@@ -24,9 +24,12 @@
 
         <!-- Game Board -->
         <div class="game-container">
-            <div class="game-board">
+            <div class="game-board single-player"> <!-- Added single-player class -->
+                <!-- Turn Indicator -->
+                <div id="turnIndicator" class="turn-indicator"></div>
+                
                 <!-- Dealer's Area -->
-                <div id="dealerArea">
+                <div id="dealerArea" class="play-area">
                     <h2 class="bebas-neue-regular">Dealer's Hand</h2>
                     <div class="card-container" id="dealerHand"></div>
                 </div>
@@ -43,13 +46,14 @@
                 <!-- Player Areas -->
                 <div class="players-container">
                     <!-- Your Hand -->
-                    <div id="playerArea" class="player-section">
+                    <div id="playerArea" class="player-section play-area">
                         <h2 class="bebas-neue-regular">Your Hand</h2>
                         <div class="card-container" id="playerHand"></div>
+                        <div id="playerStatus" class="player-status"></div>
                     </div>
 
-                    <!-- Opponent's Hand -->
-                    <div id="opponentArea" class="player-section">
+                    <!-- Opponent's Hand (initially hidden) -->
+                    <div id="opponentArea" class="player-section play-area">
                         <h2 class="bebas-neue-regular">Opponent's Hand</h2>
                         <div class="card-container" id="opponentHand"></div>
                         <div id="opponentStatus" class="opponent-status"></div>
@@ -60,18 +64,18 @@
 
         <!-- Controls Container -->
         <div class="controls-container">
-            <!-- Left Controls (AJAX and Remote Move) -->
+            <!-- Left Controls -->
             <div class="left-controls">
-                <button id="hitButton">Hit</button>
-                <button id="dealButton">Deal</button>
-                <button id="incrementButton">Increase Bet</button>
+                <button id="hitButton" class="game-button" disabled>Hit</button>
+                <button id="dealButton" class="game-button" disabled>Deal</button>
+                <button id="incrementButton" class="bet-button">Increase Bet</button>
             </div>
 
             <!-- Right Controls (Game Buttons) -->
             <div class="right-controls">
-                <button id="decrementButton">Decrease Bet</button>
-                <button id="resetButton">Reset</button>
-                <button id="stayButton">Stay</button>
+                <button id="decrementButton" class="bet-button">Decrease Bet</button>
+                <button id="resetButton" class="game-button">Reset</button>
+                <button id="stayButton" class="game-button" disabled>Stay</button>
                 <button id="readyButton" class="game-button">Ready</button>
             </div>
         </div>
@@ -79,7 +83,7 @@
         <!-- Message Area -->
         <div id="messageArea" class="message-area"></div>
         
-        <!-- Shuffling Modal -->
+        <!-- Modals -->
         <div id="shufflingModal" class="modal">
             <div class="modal-content">
                 <p>Shuffling cards...</p>

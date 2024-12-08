@@ -3,12 +3,12 @@
 //Purpose: Controls the listeners of an MVC blackjack game
 /////////////////////////////////////////////////////////////////////////////////
 //listeners.js
-// Assuming we have a variable to track the game state
-
-
 
 // Add ready button listener
 document.getElementById("readyButton").addEventListener("click", function() {
+    if (currentBet < 100) {
+        addMessage("Minimum bet is $100");
+    }
     if (!thisPlayerReady) {
         thisPlayerReady = true;
         this.disabled = true;
@@ -50,7 +50,7 @@ document.getElementById("decrementButton").addEventListener("click", function() 
 // Deal button event listener
 document.getElementById("dealButton").addEventListener("click", function() {
 
-    if (!bothPlayersReady) {
+    if (!isSinglePlayer && !bothPlayersReady) {
         addMessage("Waiting for all players to be ready!");
         return;
     }

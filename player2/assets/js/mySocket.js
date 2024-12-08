@@ -8,6 +8,32 @@ let thisPlayerReady = false;
 let playerNumber = null; // Default value, will be updated on registration
 let isSinglePlayer = true; // Start assuming single player
 
+// Function to update game layout based on if the game is single or multi
+function updateGameLayout(playerCount) {
+    const gameBoard = document.querySelector('.game-board');
+    if (!gameBoard) return;
+
+    if (playerCount === 1) {
+        gameBoard.classList.remove('multi-player');
+        gameBoard.classList.add('single-player');
+        
+        // Hide opponent area in single player mode
+        const opponentArea = document.getElementById('opponentArea');
+        if (opponentArea) {
+            opponentArea.style.display = 'none';
+        }
+    } else {
+        gameBoard.classList.remove('single-player');
+        gameBoard.classList.add('multi-player');
+        
+        // Show opponent area in multiplayer mode
+        const opponentArea = document.getElementById('opponentArea');
+        if (opponentArea) {
+            opponentArea.style.display = 'block';
+        }
+    }
+}
+
 // Register player when connection is established
 socket.on('connect', () => {
     socket.emit('registerPlayer', playerNumber);
@@ -18,45 +44,6 @@ socket.on('playerNumber', (number) => {
     playerNumber = number;
     console.log(`Assigned as Player ${playerNumber}`);
 });
-
-function sendMoveToServer(playerNumber, moveData) {
-    $.ajax({
-        url: `http://127.0.0.1:3000/player${playerNumber}`,
-        method: 'GET',
-        data: {
-            username: gamePlay.getUsername(),
-            status: moveData,
-            wallet: blackjack.player.userWallet.getValue()
-        },
-        success: function(response) {
-            console.log('Move sent successfully');
-        },
-        error: function(error) {
-            console.error('Move error:', error);
-        }
-    });
-}
-
-// Ready state functions
-function emitReadyStatus() {
-    socket.emit('playerReady', { playerNumber });
-    thisPlayerReady = true;
-}
-
-// Emit player action events
-function emitPlayerAction(action, data, playerNumber) {
-    socket.emit('playerMove', {
-        action: action,
-        data: data,
-        playerNumber: playerNumber
-    });
-}
-
-function emitHitRequest() {
-    socket.emit('hitRequest', { 
-        playerNumber 
-    });
-}
 
 // Dealer turn handlers
 socket.on('dealerReveal', (data) => {
@@ -105,7 +92,9 @@ socket.on('dealerDone', (data) => {
         readyButton.textContent = "Ready";
     }
 
-    document.getElementById("dealButton").disabled = true;
+    if (!isSinglePlayer) {
+        document.getElementById("dealButton").disabled = true;
+    }
 
     gamePlay.isGameOver();
     addMessage("Click Ready when you want to play another round!");
@@ -133,7 +122,6 @@ socket.on('updatePlayer1Board', (data) => {
             
             opponentHand.appendChild(cardElement);
             console.log('Added card to opponent hand:', data.card);
-            updateOpponentScore();
         } catch (error) {
             console.error('Error adding opponent card:', error);
         }
@@ -144,7 +132,7 @@ socket.on('updatePlayer1Board', (data) => {
 });
 
 socket.on('updatePlayer2Board', (data) => {
-    // Same implementation as updatePlayer1Board
+    // Same implementation as updatePlayer1Board with multiplayer check
     if (!data) {
         console.error('No data received in updatePlayer2Board');
         return;
@@ -165,7 +153,6 @@ socket.on('updatePlayer2Board', (data) => {
             
             opponentHand.appendChild(cardElement);
             console.log('Added card to opponent hand:', data.card);
-            updateOpponentScore();
         } catch (error) {
             console.error('Error adding opponent card:', error);
         }
@@ -175,25 +162,8 @@ socket.on('updatePlayer2Board', (data) => {
     }
 });
 
-// Function to update the opponent's score
-function updateOpponentScore() {
-    const opponentHand = document.getElementById('opponentHand');
-    const opponentCards = opponentHand.getElementsByClassName('card_deck');
-
-    let score = 0;
-    Array.from(opponentCards).forEach(cardElement => {
-        const cardRank = parseInt(cardElement.id.replace(/[^\d]/g, ''), 10);  // Extract rank from card ID
-        score += cardRank > 10 ? 10 : cardRank;  // Face cards are worth 10
-    });
-
-    document.getElementById('opponentScore').textContent = `Opponent Score: ${score}`; // Update score display
-}
-
-// Listen for ready state updates
-
-
 socket.on('bothPlayersReady', () => {
-    if (!isSinglePlayer) { // Only handle in multiplayer mode
+    if (!isSinglePlayer) {
         bothPlayersReady = true;
         addMessage("Both players ready! Deal can begin.");
         enableDealButton();
@@ -203,29 +173,50 @@ socket.on('bothPlayersReady', () => {
 socket.on('playerCountUpdate', (count) => {
     if (count === 1) {
         isSinglePlayer = true;
-        bothPlayersReady = true; // Allow single player to play
+        bothPlayersReady = true;
         enableDealButton();
         addMessage("Single player mode - Ready to play!");
+        updateGameLayout(1);
     } else {
         isSinglePlayer = false;
         if (!thisPlayerReady) {
-            bothPlayersReady = false; // Reset when second player joins
+            bothPlayersReady = false;
             disableDealButton();
             addMessage("Second player joined - Both players must click ready!");
         } else {
-            // Even if this player is ready, wait for other player
             bothPlayersReady = false;
             disableDealButton();
             addMessage("Waiting for opponent to be ready...");
         }
+        updateGameLayout(2);
     }
 });
 
+socket.on('roundStart', () => {
+    // Enable hit and stay buttons for all players at round start
+    document.getElementById('hitButton').disabled = false;
+    document.getElementById('stayButton').disabled = false;
+    document.getElementById('readyButton').disabled = false;
+    isGameInPlay = true;
+});
+
 socket.on('dealResponse', (dealData) => {
+    console.log('\n=== Received Cards ===');
+    console.log('Dealer Cards:', dealData.dealerCards);
+    console.log('Player Cards:', playerNumber === 1 ? dealData.player1Cards : dealData.player2Cards);
+    if (!isSinglePlayer) {
+        console.log('Opponent Cards:', playerNumber === 1 ? dealData.player2Cards : dealData.player1Cards);
+    }
+    console.log('===================\n');
+
     // Clear all hands
     document.getElementById('dealerHand').innerHTML = '';
     document.getElementById('playerHand').innerHTML = '';
-    document.getElementById('opponentHand').innerHTML = '';
+
+    // Only clear opponent hand if in multiplayer mode
+    if (!isSinglePlayer) {
+        document.getElementById('opponentHand').innerHTML = '';
+    }
 
     // Reset hands
     blackjack.dealer.reset();
@@ -246,7 +237,6 @@ socket.on('dealResponse', (dealData) => {
 
     // Add cards to player's hand based on player number
     const playerCards = playerNumber === 1 ? dealData.player1Cards : dealData.player2Cards;
-    const opponentCards = playerNumber === 1 ? dealData.player2Cards : dealData.player1Cards;
 
     playerCards.forEach(card => {
         // Use the helper function to create card
@@ -255,13 +245,17 @@ socket.on('dealResponse', (dealData) => {
         showDealtCard(blackjack.player.userhand, false);
     });
 
-    // Show opponent's cards
-    opponentCards.forEach(card => {
-        const cardElement = document.createElement('div');
-        cardElement.classList.add('card_deck');
-        cardElement.id = `${card.suit}${card.rank}`;
-        document.getElementById('opponentHand').appendChild(cardElement);
-    });
+
+    // Only show opponent's cards in multiplayer mode
+    if (!isSinglePlayer) {
+        const opponentCards = playerNumber === 1 ? dealData.player2Cards : dealData.player1Cards;
+        opponentCards.forEach(card => {
+            const cardElement = document.createElement('div');
+            cardElement.classList.add('card_deck');
+            cardElement.id = `${card.suit}${card.rank}`;
+            document.getElementById('opponentHand').appendChild(cardElement);
+        });
+    }
 
     isGameInPlay = true;
     updateCardsLeftDisplay();
@@ -274,6 +268,44 @@ socket.on('hitResponse', (data) => {
     showDealtCard(blackjack.player.userhand, false); // Render the new card
 });
 
+function sendMoveToServer(playerNumber, moveData) {
+    $.ajax({
+        url: `http://127.0.0.1:3000/player${playerNumber}`,
+        method: 'GET',
+        data: {
+            username: gamePlay.getUsername(),
+            status: moveData,
+            wallet: blackjack.player.userWallet.getValue()
+        },
+        success: function(response) {
+            console.log('Move sent successfully');
+        },
+        error: function(error) {
+            console.error('Move error:', error);
+        }
+    });
+}
+
+// Ready state functions
+function emitReadyStatus() {
+    socket.emit('playerReady', { playerNumber });
+    thisPlayerReady = true;
+}
+
+// Emit player action events
+function emitPlayerAction(action, data, playerNumber) {
+    socket.emit('playerMove', {
+        action: action,
+        data: data,
+        playerNumber: playerNumber
+    });
+}
+
+function emitHitRequest() {
+    socket.emit('hitRequest', { 
+        playerNumber 
+    });
+}
 
 // Handle opponent's moves
 function handleOpponentMove(moveData) {
@@ -335,6 +367,12 @@ function enableDealButton() {
         dealButton.disabled = false;
         addMessage("Deal button enabled - You can start the game!");
     }
+
+    // Make sure hit and stay buttons are enabled when appropriate
+    if (isGameInPlay) {
+        document.getElementById('hitButton').disabled = false;
+        document.getElementById('stayButton').disabled = false;
+    }
 }
 
 function disableDealButton() {
@@ -344,16 +382,6 @@ function disableDealButton() {
     }
 }
 
-// Listen for the 'shufflingModal' event
-socket.on('shufflingModal', function (data) {
-    if (data.showModal) {
-        // Show the shuffling modal
-        document.getElementById("shufflingModal").style.display = "block";
-    } else {
-        // Hide the shuffling modal
-        document.getElementById("shufflingModal").style.display = "none";
-    }
-});
 
 // Export socket functions
 window.socketHandler = {

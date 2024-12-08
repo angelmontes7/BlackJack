@@ -178,28 +178,4 @@ router.get('/highscores', (req, res) => {
     });
 });
 
-
-router.get('/checkdb', (req, res) => {
-    mydb.findAll(0, (results) => results ? res.json(results) : res.status(404).send("No records"));
-});
-
-router.get('/cleardb', (req, res) => {
-    mydb.deleteCollection((success) => {
-        if (success) {
-            createMyCollection(() => res.status(200).json({ status: 'success', message: 'Database reset' }));
-        } else res.status(500).json({ status: 'error', message: 'Error clearing database' });
-    });
-});
-
-router.get('/reset-players', (req, res) => {
-    player1UsedIndexPage = player1UsedGamePlayPage = false;
-    res.status(200).send("Player tracking reset");
-});
-
-router.get('/player-count', (req, res) => {
-    const playerCount = mydb.getPlayerCount();
-    if (playerCount === 0) { player1UsedIndexPage = player1UsedGamePlayPage = false; }
-    res.status(200).json({ playerCount });
-});
-
 module.exports = router;
